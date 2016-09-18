@@ -1,0 +1,89 @@
+urls:
+  8u101:
+    tarball:
+      file: jdk-8u101-linux-x64.tar.gz
+      dir: jdk1.8.0_101
+      url: http://download.oracle.com/otn-pub/java/jdk/8u101-b13/jdk-8u101-linux-x64.tar.gz
+      hash: 467F323BA38DF2B87311A7818BCBF60FE0FEB2139C455DFA0E08BA7ED8581328
+      jce: jce8
+    rpm:
+      file: jdk-8u101-linux-x64.rpm
+      dir: jdk1.8.0_101
+      url: http://download.oracle.com/otn-pub/java/jdk/8u101-b13/jdk-8u101-linux-x64.rpm
+      hash: 48154DB52C451F2FEFB68A39C57A09186E0CF9ED98F05269BC32821CB1BCACD6
+      jce: jce8
+
+  8u102:
+    tarball:
+      file: jdk-8u102-linux-x64.tar.gz
+      dir: jdk1.8.0_102
+      url: http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.tar.gz
+      hash: D97F0F402BD65A9C26AA266246B0894C8D6762E82373377641CA779C46406299
+      jce: jce8
+    rpm:
+      file: jdk-8u102-linux-x64.rpm
+      dir: jdk1.8.0_102
+      url: http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.rpm
+      hash: 1214CAD443522611173FA1252818DCEA48F9BBEB8EA3BFCE5E11EB0B696A968E
+      jce: jce8
+  jce8:
+    file: jce_policy-8.zip
+    dir: UnlimitedJCEPolicyJDK8
+    url: http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
+    hash: F3020A3922EFD6626C2FFF45695D527F34A8020E938A49292561F18AD1320B59
+
+  7u79:
+    tarball:
+      file: jdk-7u79-linux-x64.tar.gz
+      dir: jdk1.7.0_79
+      url: http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.tar.gz
+      hash: 29D75D0022BFA211867B876DDD31A271B551FA10727401398295E6E666A11D90
+      jce: jce7
+    rpm:
+      file: jdk-7u79-linux-x64.rpm
+      dir: jdk1.7.0_79
+      url: http://download.oracle.com/otn-pub/java/jdk/7u79-b15/jdk-7u79-linux-x64.rpm
+      hash: D42B47015E9A97FD33D4C7F60FAB801865B601927D63D524190EB4D6E0E1597B
+      jce: jce7
+
+  7u80:
+    tarball:
+      file: jdk-7u80-linux-x64.tar.gz
+      dir: jdk1.7.0_80
+      url: http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz
+      hash: BAD9A731639655118740BEE119139C1ED019737EC802A630DD7AD7AAB4309623
+      jce: jce7
+    rpm:
+      file: jdk-7u80-linux-x64.rpm
+      dir: jdk1.7.0_80
+      url: http://download.oracle.com/otn-pub/java/jdk/7u80-b15/jdk-7u80-linux-x64.rpm
+      hash: 405D5FB7FA8CC4B5E5FE2C5FA349AF6FBD742D9967772163D1FA8EA4CE35CD7B
+      jce: jce7
+
+  jce7:
+    file: UnlimitedJCEPolicyJDK7.zip
+    dir: UnlimitedJCEPolicy
+    url: http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
+    hash: 7A8D790E7BD9C2F82A83BADDFAE765797A4A56EA603C9150C87B7CDB7800194D
+
+
+  6u45:
+    tarball:
+      file: jdk-6u45-linux-x64.bin
+      dir: jdk1.6.0_45
+      url: http://download.oracle.com/otn-pub/java/jdk/6u45-b06/jdk-6u45-linux-x64.bin
+      hash: 6B493AEAB16C940CAE9E3D07AD2A5C5684FB49CF06C5D44C400C7993DB0D12E8
+      jce: jce6
+    rpm:
+      file: jdk-6u45-linux-x64-rpm.bin
+      dir: jdk1.6.0_45
+      url: http://download.oracle.com/otn-pub/java/jdk/6u45-b06/jdk-6u45-linux-x64-rpm.bin
+      hash: F432CE7DBC4FF7C104D67A967E28078EC50E084D1934E579BA6C7D6038D76CF9
+      jce: jce6
+
+  jce6:
+    file: jce_policy-6.zip
+    dir: UnlimitedJCEPolicy
+    url: http://download.oracle.com/otn-pub/java/jce_policy/6/jce_policy-6.zip
+    hash: D0C2258C3364120B4DBF7DD1655C967EEE7057AC6AE6334B5EA8CEB8BAFB9262
+

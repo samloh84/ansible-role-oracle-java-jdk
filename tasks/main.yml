@@ -1,0 +1,74 @@
+
+- set_fact:
+    prefix: "/opt/java"
+- set_fact:
+    temp_dir: "/tmp/java/jdk-{{ java_version }}"
+- set_fact:
+    java_home: "{{ prefix }}/{{ urls[java_version].tarball.dir }}"
+- set_fact:
+    jre_home: "{{ java_home }}/jre"
+- set_fact:
+    jdk_url: "{{ urls[java_version].tarball.url }}"
+- set_fact:
+    jdk_hash: "{{ urls[java_version].tarball.hash }}"
+- set_fact:
+    jdk_file: "{{ temp_dir }}/{{ urls[java_version].tarball.file }}"
+- set_fact:
+    jce_version: "{{ urls[java_version].tarball.jce }}"
+- set_fact:
+    jce_dir: "{{ urls[jce_version].dir }}"
+- set_fact:
+    jce_url: "{{ urls[jce_version].url }}"
+- set_fact:
+    jce_hash: "{{ urls[jce_version].hash }}"
+- set_fact:
+    jce_file: "{{ temp_dir }}/{{ urls[jce_version].file }}"
+
+- file:
+    path: "{{ temp_dir }}"
+    state: directory
+
+- file:
+    path: "{{ java_home }}"
+    state: directory
+
+- name: Download JDK
+  get_url:
+    url: "{{ jdk_url }}"
+    dest: "{{ jdk_file }}"
+    headers: "Cookie: oraclelicense=accept-securebackup-cookie"
+    checksum: "sha256:{{ jdk_hash }}"
+
+
+- name: Extract JDK
+  unarchive:
+    src: "{{ jdk_file }}"
+    dest: "{{ prefix }}"
+    remote_src: yes
+
+- name: Download JCE
+  get_url:
+    url: "{{ jce_url }}"
+    dest: "{{ jce_file }}"
+    headers: "Cookie: oraclelicense=accept-securebackup-cookie"
+    checksum: "sha256:{{ jce_hash }}"
+
+- name: Extract JCE
+  unarchive:
+    src: "{{ jce_file }}"
+    dest: "{{ temp_dir }}"
+    remote_src: yes
+
+- copy: 
+    src: "{{ jce_dir }}"
+    dest: "{{ jre_home }}/lib/security"
+    remote_src: yes
+
+- template: 
+    src: "templates/java.sh.j2"
+    dest: "/etc/profile.d/java.sh"
+
+- name: Clean Temporary files
+  file: 
+    path: "{{ temp_dir }}"
+    state: absent
