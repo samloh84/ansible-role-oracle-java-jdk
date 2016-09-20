@@ -1,7 +1,5 @@
 
 - set_fact:
-    prefix: "/opt/java"
-- set_fact:
     temp_dir: "/tmp/java/jdk-{{ java_version }}"
 - set_fact:
     java_home: "{{ prefix }}/{{ urls[java_version].tarball.dir }}"
