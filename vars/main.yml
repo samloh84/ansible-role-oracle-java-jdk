@@ -18,7 +18,7 @@ urls:
       file: jdk-8u102-linux-x64.tar.gz
       dir: jdk1.8.0_102
       url: http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.tar.gz
-      hash: D97F0F402BD65A9C26AA266246B0894C8D6762E82373377641CA779C46406299
+      hash: 7CFBE0BC0391A4ABE60B3E9EB2A541D2315B99B9CB3A24980E618A89229E04B7
       jce: jce8
     rpm:
       file: jdk-8u102-linux-x64.rpm
