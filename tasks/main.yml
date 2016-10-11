@@ -1,69 +1,98 @@
+- set_fact:
+    download_dir: "{{ role_path }}/files"
+    temp_dir: "{{ tmp_prefix }}/java-{{ java_version }}"
+    java_dir: "{{ urls.jdk[java_version].binaries.dir }}"
+    java_url: "{{ urls.jdk[java_version].binaries.url }}"
+    java_hash: "{{ urls.jdk[java_version].binaries.hash }}"
+    java_filename: "{{ urls.jdk[java_version].binaries.file }}"
+    jce_version: "{{ urls.jdk[java_version].binaries.jceVersion }}"
 
 - set_fact:
-    temp_dir: "/tmp/java/jdk-{{ java_version }}"
-    java_home: "{{ prefix }}/{{ urls[java_version].tarball.dir }}"
-    jdk_url: "{{ urls[java_version].tarball.url }}"
-    jdk_hash: "{{ urls[java_version].tarball.hash }}"
-    jce_version: "{{ urls[java_version].tarball.jce }}"
+    java_home: "{{ prefix }}/{{ java_dir }}"
+    java_archive_temp_path: "{{ temp_dir }}/{{ java_filename }}"
+    java_archive_download_path: "{{ download_dir }}/{{ java_filename }}"
+    jce_dir: "{{ urls.jce[jce_version].binaries.dir }}"
+    jce_url: "{{ urls.jce[jce_version].binaries.url }}"
+    jce_hash: "{{ urls.jce[jce_version].binaries.hash }}"
+    jce_filename: "{{ urls.jce[jce_version].binaries.file }}"
+
 - set_fact:
+    jce_archive_temp_path: "{{ temp_dir }}/{{ jce_filename }}"
+    jce_archive_download_path: "{{ download_dir }}/{{ jce_filename }}"
+    jce_temp_dir: "{{ temp_dir }}/{{ jce_dir }}"
     jre_home: "{{ java_home }}/jre"
-    jdk_file: "{{ temp_dir }}/{{ urls[java_version].tarball.file }}"
-    jce_dir: "{{ temp_dir }}/{{ urls[jce_version].dir }}"
-    jce_url: "{{ urls[jce_version].url }}"
-    jce_hash: "{{ urls[jce_version].hash }}"
-    jce_file: "{{ temp_dir }}/{{ urls[jce_version].file }}"
 
-- file:
+- name: "Create Temporary Directory {{ temp_dir }}"
+  file:
     path: "{{ temp_dir }}"
     state: directory
 
-- file:
+- name: "Create Java Directory {{ java_home }}"
+  file:
     path: "{{ java_home }}"
     state: directory
 
-- name: Download JDK
+- name: "Create Download Directory on control server: {{ download_dir }}"
+  delegate_to: 127.0.0.1
+  file:
+    path: "{{ download_dir }}"
+    state: directory
+
+- name: "Download Java archive to control server Download Path: {{ java_archive_download_path }}"
+  delegate_to: 127.0.0.1
   get_url:
-    url: "{{ jdk_url }}"
-    dest: "{{ jdk_file }}"
+    url: "{{ java_url }}"
+    dest: "{{ java_archive_download_path }}"
     headers: "Cookie: oraclelicense=accept-securebackup-cookie"
-    checksum: "sha256:{{ jdk_hash }}"
+    checksum: "sha256:{{ java_hash }}"
 
-
-- name: Extract JDK
-  unarchive:
-    src: "{{ jdk_file }}"
-    dest: "{{ prefix }}"
-    remote_src: yes
-
-- name: Download JCE
+- name: "Download JCE archive to control server Download Path: {{ jce_archive_download_path }}"
+  delegate_to: 127.0.0.1
   get_url:
     url: "{{ jce_url }}"
-    dest: "{{ jce_file }}"
+    dest: "{{ jce_archive_download_path }}"
     headers: "Cookie: oraclelicense=accept-securebackup-cookie"
     checksum: "sha256:{{ jce_hash }}"
 
-- name: Extract JCE
+- name: "Copy Java archive to Temporary Path: {{ java_archive_temp_path }}"
+  copy:
+    src: "{{ java_archive_download_path }}"
+    dest: "{{ java_archive_temp_path }}"
+
+- name: "Copy JCE archive to Temporary Path: {{ jce_archive_temp_path }}"
+  copy:
+    src: "{{ jce_archive_download_path }}"
+    dest: "{{ jce_archive_temp_path }}"
+
+- name: "Extract Java archive to Directory: {{ prefix }}"
   unarchive:
-    src: "{{ jce_file }}"
+    src: "{{ java_archive_temp_path }}"
+    dest: "{{ prefix }}"
+    remote_src: yes
+
+- name: "Extract JCE archive to Directory: {{ temp_dir }}"
+  unarchive:
+    src: "{{ jce_archive_temp_path }}"
     dest: "{{ temp_dir }}"
     remote_src: yes
 
-- copy: 
-    src: "{{ jce_dir }}/US_export_policy.jar"
-    dest: "{{ jre_home }}/lib/security/US_export_policy.jar"
+- name: "Copy JCE files to {{ jre_home }}/lib/security"
+  copy:
+    src: "{{ jce_temp_dir }}/{{ item }}"
+    dest: "{{ jre_home }}/lib/security/{{ item }}"
     remote_src: yes
+  with_items:
+    - US_export_policy.jar
+    - local_policy.jar
 
-- copy:
-    src: "{{ jce_dir }}/local_policy.jar"
-    dest: "{{ jre_home }}/lib/security/local_policy.jar"
-    remote_src: yes
-
-- template: 
+- name: "Install Java environment variables"
+  template:
     src: "templates/java.sh.j2"
     dest: "/etc/profile.d/java.sh"
 
-- name: Clean Temporary files
-  file: 
-    path: "{{ temp_dir }}"
+- name: "Clean Temporary files"
+  file:
+    path: "{{ tmp_prefix }}"
     state: absent
 
+# TODO: handle Java 6u45-b06

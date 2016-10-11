@@ -1,2 +1,3 @@
-java_version: 8u102
+java_version: 8u102-b14
 prefix: "/opt/java"
+tmp_prefix: "/tmp/java"
