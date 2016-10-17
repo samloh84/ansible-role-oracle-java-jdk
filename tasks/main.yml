@@ -1,6 +1,6 @@
 - set_fact:
     download_dir: "{{ role_path }}/files"
-    temp_dir: "{{ tmp_prefix }}/java-{{ java_version }}"
+    tmp_dir: "{{ tmp_prefix }}/java-{{ java_version }}"
     java_dir: "{{ urls.jdk[java_version].binaries.dir }}"
     java_url: "{{ urls.jdk[java_version].binaries.url }}"
     java_hash: "{{ urls.jdk[java_version].binaries.hash }}"
@@ -9,7 +9,7 @@
 
 - set_fact:
     java_home: "{{ prefix }}/{{ java_dir }}"
-    java_archive_temp_path: "{{ temp_dir }}/{{ java_filename }}"
+    java_archive_temp_path: "{{ tmp_dir }}/{{ java_filename }}"
     java_archive_download_path: "{{ download_dir }}/{{ java_filename }}"
     jce_dir: "{{ urls.jce[jce_version].binaries.dir }}"
     jce_url: "{{ urls.jce[jce_version].binaries.url }}"
@@ -17,26 +17,27 @@
     jce_filename: "{{ urls.jce[jce_version].binaries.file }}"
 
 - set_fact:
-    jce_archive_temp_path: "{{ temp_dir }}/{{ jce_filename }}"
+    jce_archive_temp_path: "{{ tmp_dir }}/{{ jce_filename }}"
     jce_archive_download_path: "{{ download_dir }}/{{ jce_filename }}"
-    jce_temp_dir: "{{ temp_dir }}/{{ jce_dir }}"
+    jce_tmp_dir: "{{ tmp_dir }}/{{ jce_dir }}"
     jre_home: "{{ java_home }}/jre"
 
-- name: "Create Temporary Directory {{ temp_dir }}"
+- name: "Create Directories"
   file:
-    path: "{{ temp_dir }}"
+    path: "{{ item }}"
     state: directory
-
-- name: "Create Java Directory {{ java_home }}"
-  file:
-    path: "{{ java_home }}"
-    state: directory
+    mode: 0755
+  with_items:
+    - "{{ tmp_dir }}"
+    - "{{ java_home }}"
 
 - name: "Create Download Directory on control server: {{ download_dir }}"
   delegate_to: 127.0.0.1
   file:
     path: "{{ download_dir }}"
     state: directory
+    mode: 0755
+
 
 - name: "Download Java archive to control server Download Path: {{ java_archive_download_path }}"
   delegate_to: 127.0.0.1
@@ -70,15 +71,15 @@
     dest: "{{ prefix }}"
     remote_src: yes
 
-- name: "Extract JCE archive to Directory: {{ temp_dir }}"
+- name: "Extract JCE archive to Directory: {{ tmp_dir }}"
   unarchive:
     src: "{{ jce_archive_temp_path }}"
-    dest: "{{ temp_dir }}"
+    dest: "{{ tmp_dir }}"
     remote_src: yes
 
 - name: "Copy JCE files to {{ jre_home }}/lib/security"
   copy:
-    src: "{{ jce_temp_dir }}/{{ item }}"
+    src: "{{ jce_tmp_dir }}/{{ item }}"
     dest: "{{ jre_home }}/lib/security/{{ item }}"
     remote_src: yes
   with_items:
