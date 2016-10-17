@@ -89,6 +89,7 @@
   template:
     src: "java.sh.j2"
     dest: "/etc/profile.d/java.sh"
+    mode: 0644
 
 - name: "Clean Temporary files"
   file:
