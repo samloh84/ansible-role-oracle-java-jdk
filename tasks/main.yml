@@ -87,7 +87,7 @@
 
 - name: "Install Java environment variables"
   template:
-    src: "templates/java.sh.j2"
+    src: "java.sh.j2"
     dest: "/etc/profile.d/java.sh"
 
 - name: "Clean Temporary files"
