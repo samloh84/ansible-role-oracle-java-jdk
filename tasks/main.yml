@@ -100,6 +100,8 @@
 
 - name: "Fix Permissions"
   shell: "{{ item }}"
+  args:
+    executable: /bin/bash
   with_items:
     - "chown -R root:root {{ java_home }}"
     - "find {{ java_home }} -perm -u+r -exec chmod a+r {} \\;"
