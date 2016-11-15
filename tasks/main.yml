@@ -97,4 +97,14 @@
     path: "{{ tmp_prefix }}"
     state: absent
 
+
+- name: "Fix Permissions"
+  shell: "{{ item }}"
+  with_items:
+    - "chown -R root:root {{ java_home }}"
+    - "find {{ java_home }} -perm -u+r -exec chmod a+r {} \\;"
+    - "find {{ java_home }} -perm -u+w -exec chmod a+w {} \\;"
+    - "find {{ java_home }} -perm -u+x -exec chmod a+x {} \\;"
+
+
 # TODO: handle Java 6u45-b06
